@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Coffee Board · iPad</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f5eee3;        /* 旧纸背景 */
+      --card: #ebdfcc;      /* 卡片底 */
+      --text-main: #3e2a1f; /* 深咖啡文字 */
+      --text-sub: #7a6a55;  /* 浅咖啡文字 */
+      --border: #c2a58b;    /* 线条 */
+      --accent-dark: #3c3c3c;   /* 金属深灰：呼应德龙机身 */
+      --accent-green: #3f5b4b;  /* 少量墨绿点缀 */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text-main);
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: calc(100vh - 48px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .top-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .date {
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    .machine-tag {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-dark);
+      color: var(--accent-dark);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .main-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .today-main {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 16px;
+    }
+
+    /* 表单样式 */
+
+    .field-group {
+      margin-bottom: 10px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+
+    .field-input,
+    .field-textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font: inherit;
+      color: var(--text-main);
+    }
+
+    .field-input {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+      padding: 2px 0 4px;
+      font-size: 16px;
+    }
+
+    .field-input::placeholder,
+    .field-textarea::placeholder {
+      color: rgba(0, 0, 0, 0.25);
+    }
+
+    .params-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 16px;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .param-block .field-input {
+      font-size: 14px;
+    }
+
+    .flavor-input {
+      font-size: 13px;
+      border-bottom: 1px dashed rgba(0, 0, 0, 0.15);
+      padding-bottom: 4px;
+    }
+
+    .field-textarea {
+      resize: none;
+      min-height: 70px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.3);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .note-block .field-textarea {
+      min-height: 60px;
+    }
+
+    .today-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px dashed var(--border);
+      padding-top: 8px;
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-sub);
+      gap: 8px;
+    }
+
+    .rating-dots {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .rating-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--accent-dark);
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .rating-dots span.filled {
+      background: var(--accent-dark);
+    }
+
+    .clear-btn {
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      background: transparent;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--text-sub);
+      cursor: pointer;
+    }
+
+    .clear-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* 配方列表右侧 */
+
+    .recipe-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: auto;
+    }
+
+    .recipe-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .recipe-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .recipe-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .recipe-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .recipe-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(60, 60, 60, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .recipe-line {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .bean-footer {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .bean-footer-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .bean-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .app {
+        height: auto;
+      }
+
+      .today-main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top-bar">
+      <div class="top-left">
+        <div class="date" id="dateDisplay">2025 / 12 / 04 · Thursday</div>
+        <div class="subtitle">今日咖啡 · Daily Shot</div>
+      </div>
+      <div class="machine-tag">De'Longhi 890</div>
+    </header>
+
+    <main class="main-grid">
+      <!-- 左侧：今日咖啡（可编辑 + 自动保存） -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Today&apos;s Coffee</div>
+            <div class="card-subtitle">每日记录 · Parameters &amp; Notes</div>
+          </div>
+          <span class="pill">Espresso Log</span>
+        </div>
+
+        <div class="today-main">
+          <!-- 左：名称 / 参数 / 风味 -->
+          <div>
+            <div class="field-group">
+              <div class="field-label">咖啡名称 · Coffee Name</div>
+              <input
+                class="field-input"
+                type="text"
+                placeholder="例如：Hayes Valley Double Shot"
+                data-field="coffeeName"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="field-group">
+              <div class="field-label">参数 · Parameters</div>
+              <div class="params-grid">
+                <div class="param-block">
+                  <div class="field-label">Dose 投粉 (g)</div>
+                  <input
+                    class="field-input"
+                    type="number"
+                    step="0.1"
+                    data-field="dose"
+                    placeholder="18"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="param-block">
+                  <div class="field-label">Yield 出品 (g)</div>
+                  <input
+                    class="field-input"
+                    type="number"
+                    step="0.1"
+                    data-field="yield"
+                    placeholder="36"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="param-block">
+                  <div class="field-label">Time 时间 (s)</div>
+                  <input
+                    class="field-input"
+                    type="number"
+                    step="1"
+                    data-field="time"
+                    placeholder="28"
+                    autocomplete="off"
+                  />
+                </div>
+                <div class="param-block">
+                  <div class="field-label">Temp 温度 (℃)</div>
+                  <input
+                    class="field-input"
+                    type="number"
+                    step="0.5"
+                    data-field="temp"
+                    placeholder="93"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <div class="field-label">风味关键词 · Flavor Notes</div>
+              <input
+                class="field-input flavor-input"
+                type="text"
+                data-field="flavors"
+                placeholder="例如：黑巧克力 · 烤坚果 · 微苦回甘"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <!-- 右：做法步骤 -->
+          <div>
+            <div class="field-group">
+              <div class="field-label">今日做法 · Steps</div>
+              <textarea
+                class="field-textarea"
+                data-field="steps"
+                placeholder="例：
+1. 称重 18 g 咖啡豆，按 890 适配档位细磨；
+2. 均匀布粉与压粉，装入 890 手柄；
+3. 预浸 3 秒后启动萃取，至 36 g 停止；
+4. 轻晃杯子闻香，记录味道与调整想法。"
+              ></textarea>
+            </div>
+
+            <div class="field-group note-block">
+              <div class="field-label">今日笔记 · Notes</div>
+              <textarea
+                class="field-textarea"
+                data-field="notes"
+                placeholder="今天萃取的感受、明天想调整的细节……"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="today-footer">
+          <div>
+            今日评分：
+            <span class="rating-dots" id="ratingDots">
+              <span data-value="1"></span>
+              <span data-value="2"></span>
+              <span data-value="3"></span>
+              <span data-value="4"></span>
+              <span data-value="5"></span>
+            </span>
+          </div>
+          <button class="clear-btn" id="clearBtn">清空今日记录</button>
+        </div>
+      </section>
+
+      <!-- 右侧：配方列表 + 豆子（暂时静态展示） -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Recipes</div>
+            <div class="card-subtitle">配方库 · 适配 De&apos;Longhi 890</div>
+          </div>
+        </div>
+
+        <div class="recipe-list">
+          <div class="recipe-row">
+            <div class="recipe-top">
+              <div class="recipe-name">经典双份意式</div>
+              <div class="recipe-tags">
+                <span class="recipe-tag">espresso</span>
+                <span class="recipe-tag">890</span>
+              </div>
+            </div>
+            <div class="recipe-line">18 g → 36 g · 28 s · 93 ℃ · 中深烘</div>
+            <div class="recipe-line">Chocolate · Nutty · Low Acidity</div>
+          </div>
+
+          <div class="recipe-row">
+            <div class="recipe-top">
+              <div class="recipe-name">冰美式 · 日常版</div>
+              <div class="recipe-tags">
+                <span class="recipe-tag">americano</span>
+                <span class="recipe-tag">iced</span>
+              </div>
+            </div>
+            <div class="recipe-line">双份意式 + 120–150 ml 冷水，加入冰块</div>
+            <div class="recipe-line">保持中深烘，避免加冰后味道过淡</div>
+          </div>
+
+          <div class="recipe-row">
+            <div class="recipe-top">
+              <div class="recipe-name">拿铁 · 890 蒸奶版</div>
+              <div class="recipe-tags">
+                <span class="recipe-tag">latte</span>
+                <span class="recipe-tag">milk</span>
+              </div>
+            </div>
+            <div class="recipe-line">18 g → 36 g 意式，蒸奶 180 ml，微甜</div>
+            <div class="recipe-line">中深烘偏坚果，搭配全脂牛奶更顺滑</div>
+          </div>
+        </div>
+
+        <div class="bean-footer">
+          <div class="bean-footer-title">当前豆子 · Bean Cellar</div>
+          <div class="bean-row">
+            <span>Hayes Valley · 深烘</span>
+            <span>烘焙：2025-11-20</span>
+          </div>
+          <div class="bean-row">
+            <span>耶加雪菲 · 中浅</span>
+            <span>烘焙：2025-11-28</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = "coffeeBoard_today_v1";
+
+      const dateEl = document.getElementById("dateDisplay");
+      const ratingDots = document.querySelectorAll("#ratingDots span");
+      const clearBtn = document.getElementById("clearBtn");
+
+      const fieldSelectors = [
+        "coffeeName",
+        "dose",
+        "yield",
+        "time",
+        "temp",
+        "flavors",
+        "steps",
+        "notes",
+      ];
+
+      const fields = {};
+      fieldSelectors.forEach((name) => {
+        fields[name] = document.querySelector('[data-field="' + name + '"]');
+      });
+
+      let currentRating = 0;
+
+      function formatDateForDisplay(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        const weekdayMap = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+        const enDay = weekdayMap[date.getDay()];
+        return y + " / " + m + " / " + d + " · " + enDay;
+      }
+
+      function setTodayDate() {
+        if (!dateEl) return;
+        const today = new Date();
+        dateEl.textContent = formatDateForDisplay(today);
+      }
+
+      function loadData() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const data = JSON.parse(raw);
+          fieldSelectors.forEach((name) => {
+            const el = fields[name];
+            if (!el) return;
+            const value = data[name];
+            if (value == null) return;
+            if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+              el.value = value;
+            }
+          });
+          if (typeof data.rating === "number") {
+            setRating(data.rating);
+          }
+        } catch (e) {
+          console.warn("Failed to load coffee board data", e);
+        }
+      }
+
+      function saveData() {
+        try {
+          const data = {};
+          fieldSelectors.forEach((name) => {
+            const el = fields[name];
+            if (!el) return;
+            if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+              data[name] = el.value;
+            }
+          });
+          data.rating = currentRating;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch (e) {
+          console.warn("Failed to save coffee board data", e);
+        }
+      }
+
+      function setRating(value) {
+        currentRating = value;
+        ratingDots.forEach((dot) => {
+          const v = Number(dot.dataset.value || "0");
+          dot.classList.toggle("filled", v <= value);
+        });
+      }
+
+      function bindEvents() {
+        // 自动保存输入
+        fieldSelectors.forEach((name) => {
+          const el = fields[name];
+          if (!el) return;
+          el.addEventListener("input", saveData);
+        });
+
+        // 评分点击
+        ratingDots.forEach((dot) => {
+          dot.addEventListener("click", () => {
+            const value = Number(dot.dataset.value || "0");
+            setRating(value);
+            saveData();
+          });
+        });
+
+        // 清空按钮
+        if (clearBtn) {
+          clearBtn.addEventListener("click", () => {
+            const ok = confirm("确认清空今日咖啡记录？");
+            if (!ok) return;
+            fieldSelectors.forEach((name) => {
+              const el = fields[name];
+              if (!el) return;
+              if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+                el.value = "";
+              }
+            });
+            setRating(0);
+            saveData();
+          });
+        }
+      }
+
+      // 初始化
+      setTodayDate();
+      loadData();
+      bindEvents();
+    })();
+  </script>
+</body>
+</html>
