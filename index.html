@@ -308,13 +308,13 @@
 
     /* 图片上传位（适中尺寸） */
 
-    .photo-row {
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-      margin-top: 4px;
-      flex-wrap: nowrap;
-    }
+.photo-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 4px;
+  flex-wrap: wrap; /* 让按钮和大图片不挤在一行 */
+}
 
     .photo-upload {
       border-radius: 10px;
@@ -332,18 +332,18 @@
       background: var(--accent-soft);
     }
 
-    .photo-preview {
-      width: 130px;
-      height: 130px;
-      border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.12);
-      background: rgba(0, 0, 0, 0.02);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
+.photo-preview {
+  width: 200px;
+  height: 200px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
 
     .photo-preview img {
       max-width: 100%;
