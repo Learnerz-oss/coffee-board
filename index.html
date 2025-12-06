@@ -8,9 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Daily Coffee" />
 
-  <!-- 使用你刚上传的 coffe-icon.png.png 当图标 -->
-<link rel="apple-touch-icon" href="coffee-icon.jpg" />
-
+  <!-- iPad 主屏幕图标：请确保仓库根目录有 coffee-icon.jpg -->
+  <link rel="apple-touch-icon" href="coffee-icon.jpg" />
 
   <title>Daily Coffee · 先喝一口再说</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -61,10 +60,11 @@
     .top {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       gap: 16px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       padding-bottom: 10px;
+      flex-wrap: wrap;
     }
 
     .brand {
@@ -110,6 +110,15 @@
     }
 
     .top-right {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .top-right-info {
       text-align: right;
       display: flex;
       flex-direction: column;
@@ -136,6 +145,31 @@
       font-size: 11px;
       color: var(--text-sub);
       background: rgba(255, 255, 255, 0.6);
+    }
+
+    .top-tabs {
+      display: inline-flex;
+      padding: 2px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.04);
+      gap: 2px;
+    }
+
+    .tab-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 11px;
+      background: transparent;
+      color: var(--text-sub);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .tab-btn.tab-active {
+      background: #ffffff;
+      color: var(--accent-dark);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     }
 
     /* 主体布局 */
@@ -255,7 +289,24 @@
       line-height: 1.5;
     }
 
-    /* 图片上传位 */
+    /* 豆子档案按钮 */
+
+    .bean-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.16);
+      padding: 2px 8px;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--accent-dark);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .bean-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* 图片上传位（适中尺寸） */
 
     .photo-row {
       display: flex;
@@ -282,10 +333,10 @@
     }
 
     .photo-preview {
-      width: 90px;
-      height: 90px;
-      border-radius: 12px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      width: 130px;
+      height: 130px;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
       background: rgba(0, 0, 0, 0.02);
       display: flex;
       align-items: center;
@@ -298,6 +349,7 @@
       max-width: 100%;
       max-height: 100%;
       display: none;
+      object-fit: cover;
     }
 
     .photo-placeholder {
@@ -414,7 +466,7 @@
       box-shadow: none;
     }
 
-    /* 右侧：今日摘要 + 历史记录 */
+    /* 右侧：摘要 + 历史简表 */
 
     .summary-box {
       padding: 8px 10px;
@@ -466,10 +518,42 @@
       border-radius: 12px;
       border: 1px solid rgba(0, 0, 0, 0.06);
       background: rgba(250, 252, 251, 0.9);
+      font-size: 12px;
+    }
+
+    .history-item-inner {
+      display: flex;
+      gap: 8px;
+    }
+
+    .history-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.03);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .history-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .history-thumb-placeholder {
+      font-size: 10px;
+      color: var(--text-sub);
+    }
+
+    .history-text {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      font-size: 12px;
+      flex: 1;
     }
 
     .history-top {
@@ -508,7 +592,319 @@
       margin-top: 4px;
     }
 
-    /* 底部小字 */
+    /* 历史回顾页 */
+
+    .history-page {
+      margin-top: 2px;
+      padding: 14px 16px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .history-header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .history-filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      font-size: 12px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 120px;
+    }
+
+    .filter-group label {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .filter-group select,
+    .filter-group input {
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.16);
+      padding: 4px 10px;
+      font-size: 12px;
+      outline: none;
+      background: #ffffff;
+    }
+
+    .filter-grow {
+      flex: 1 1 160px;
+    }
+
+    .history-big-list {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 280px;
+      overflow: auto;
+    }
+
+    .history-big-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(250, 252, 251, 0.95);
+    }
+
+    .history-big-photo {
+      width: 72px;
+      height: 72px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.03);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .history-big-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .history-big-photo-placeholder {
+      font-size: 11px;
+      color: var(--text-sub);
+      text-align: center;
+      padding: 4px;
+    }
+
+    .history-big-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .history-big-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .history-big-name {
+      font-weight: 500;
+    }
+
+    .history-big-meta {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .history-big-stars {
+      font-size: 11px;
+      color: var(--accent-dark);
+    }
+
+    .history-big-notes {
+      font-size: 12px;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .history-big-empty {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 4px;
+    }
+
+    /* 豆子档案弹窗 */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-dialog {
+      position: relative;
+      width: min(560px, 100% - 32px);
+      max-height: min(520px, 100% - 80px);
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+      padding: 14px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 51;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .modal-sub {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--text-sub);
+    }
+
+    .bean-list {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 190px;
+      overflow: auto;
+      font-size: 12px;
+    }
+
+    .bean-item {
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      padding: 6px 8px;
+      background: #fafcfb;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .bean-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .bean-name {
+      font-weight: 500;
+    }
+
+    .bean-meta {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .bean-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .bean-tag {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .bean-empty {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    .bean-btn-small {
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.16);
+      padding: 3px 8px;
+      font-size: 11px;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    .bean-btn-small.danger {
+      border-color: rgba(233, 146, 139, 0.7);
+      color: var(--danger);
+      background: #fff7f6;
+    }
+
+    .bean-form {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(0, 0, 0, 0.08);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 6px 10px;
+      font-size: 12px;
+    }
+
+    .bean-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .bean-form-group label {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .bean-form-group input,
+    .bean-form-group select {
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.16);
+      padding: 4px 8px;
+      font-size: 12px;
+      outline: none;
+      background: #ffffff;
+    }
+
+    .bean-form-wide {
+      grid-column: 1 / -1;
+    }
+
+    .bean-form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 2px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
 
     .footer {
       margin-top: 4px;
@@ -539,6 +935,11 @@
         align-items: flex-start;
       }
 
+      .top-right-info {
+        align-items: flex-start;
+        text-align: left;
+      }
+
       .main {
         grid-template-columns: minmax(0, 1fr);
       }
@@ -547,12 +948,12 @@
 </head>
 <body>
   <div class="app">
-    <!-- 顶部：标题 + 日期 + 签名 -->
+    <!-- 顶部 -->
     <header class="top">
       <div class="brand">
         <div class="brand-line1">
           <div class="title">Daily Coffee Journal</div>
-          <span class="pill">v1.0</span>
+          <span class="pill">v1.4</span>
         </div>
         <div class="tagline">记录每一杯小小的进步</div>
         <div class="signature">
@@ -561,18 +962,25 @@
         </div>
       </div>
       <div class="top-right">
-        <div class="date" id="dateDisplay">2025 / 12 / 04</div>
-        <div class="weekday" id="weekdayDisplay">Thursday · 今天这杯会更好一点</div>
-        <div class="machine-pill">Machine · De&apos;Longhi 890</div>
+        <div class="top-right-info">
+          <div class="date" id="dateDisplay">2025 / 12 / 04</div>
+          <div class="weekday" id="weekdayDisplay">Thursday · 今天这杯会更好一点</div>
+          <div class="machine-pill">Machine · De'Longhi 890</div>
+        </div>
+        <div class="top-tabs">
+          <button class="tab-btn tab-active" type="button" id="tabToday">今天</button>
+          <button class="tab-btn" type="button" id="tabHistory">历史回顾</button>
+        </div>
       </div>
     </header>
 
-    <main class="main">
+    <!-- 视图一：今天这杯 -->
+    <main class="main" id="viewToday">
       <!-- 左侧：今天这杯 -->
       <section class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">今天这杯 · Today&apos;s Cup</div>
+            <div class="card-title">今天这杯 · Today's Cup</div>
             <div class="card-sub">只记录今天这一杯喝完的真实感受</div>
           </div>
         </div>
@@ -596,13 +1004,15 @@
             <div class="field-group">
               <div class="field-label-row">
                 <div class="field-label">豆子 · Beans</div>
-                <div class="field-hint">烘焙商 / 产区 / 拼配</div>
+                <button type="button" class="bean-btn" id="openBeanModalBtn">
+                  豆子档案
+                </button>
               </div>
               <input
                 class="field-input"
                 type="text"
                 data-field="beans"
-                placeholder="例如：Blue Bottle Hayes Valley Blend"
+                placeholder="例如：罕贝拉花魁 G1 · 手冲"
               />
             </div>
 
@@ -674,7 +1084,7 @@
             </div>
           </div>
 
-          <!-- 右半：风味 + 心情 + 图片 -->
+          <!-- 右半：风味 + 心情 + 图片 + 备注 -->
           <div>
             <div class="field-group">
               <div class="field-label-row">
@@ -756,7 +1166,7 @@
         </div>
       </section>
 
-      <!-- 右侧：摘要 + 历史记录 -->
+      <!-- 右侧：摘要 + 历史简表 -->
       <section class="card">
         <div class="card-header">
           <div>
@@ -795,22 +1205,171 @@
       </section>
     </main>
 
+    <!-- 视图二：历史回顾页 -->
+    <section class="history-page hidden" id="viewHistory">
+      <div class="history-header">
+        <div class="history-header-text">
+          <div class="card-title">历史回顾 · All Cups</div>
+          <div class="card-sub">从 localStorage 读取，只在本设备可见</div>
+        </div>
+        <button class="btn btn-secondary" type="button" id="backToTodayBtn">
+          回到今天这杯
+        </button>
+      </div>
+
+      <div class="history-filters">
+        <div class="filter-group">
+          <label for="filterRoast">烘焙度</label>
+          <select id="filterRoast">
+            <option value="">全部</option>
+            <option value="浅烘">浅烘</option>
+            <option value="中烘">中烘</option>
+            <option value="中深烘">中深烘</option>
+            <option value="深烘">深烘</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filterRating">最低评分</label>
+          <select id="filterRating">
+            <option value="0">不限</option>
+            <option value="1">★ 1 星及以上</option>
+            <option value="2">★ 2 星及以上</option>
+            <option value="3">★ 3 星及以上</option>
+            <option value="4">★ 4 星及以上</option>
+            <option value="5">★ 5 星</option>
+          </select>
+        </div>
+        <div class="filter-group filter-grow">
+          <label for="filterKeyword">关键词</label>
+          <input
+            id="filterKeyword"
+            type="text"
+            placeholder="按咖啡名 / 豆子 / 备注搜索"
+          />
+        </div>
+      </div>
+
+      <div class="history-big-list" id="historyBigList"></div>
+      <div class="history-big-empty" id="historyBigEmpty">
+        还没有任何历史记录。喝到一杯满意的，先在「今天这杯」里点「保存到历史」。
+      </div>
+    </section>
+
     <footer class="footer">
       <span>数据仅保存在本设备浏览器的 localStorage 中。</span>
-      <span>Designed for De&apos;Longhi 890 · by 先喝一口再说</span>
+      <span>Designed for De'Longhi 890 · by 先喝一口再说</span>
     </footer>
+  </div>
+
+  <!-- 豆子档案弹窗 -->
+  <div class="modal hidden" id="beanModal">
+    <div class="modal-backdrop" id="beanModalBackdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">豆子档案库 · Bean Profiles</div>
+          <div class="modal-sub">常用豆子的一套参数存在这里，一键填入今天这杯。</div>
+        </div>
+        <button class="modal-close" type="button" id="beanModalCloseBtn">&times;</button>
+      </div>
+
+      <div class="bean-list" id="beanList"></div>
+      <div class="bean-empty hidden" id="beanEmptyHint">
+        还没有任何档案，可以在下面添加一条，例如「罕贝拉花魁 G1 手冲」。
+      </div>
+
+      <div class="bean-form">
+        <div class="bean-form-group bean-form-wide">
+          <label for="beanNameInput">名称（必填）</label>
+          <input
+            id="beanNameInput"
+            type="text"
+            placeholder="例如：罕贝拉花魁 G1 · 手冲配方"
+          />
+        </div>
+        <div class="bean-form-group">
+          <label for="beanRoasteryInput">烘焙商 / 产地</label>
+          <input
+            id="beanRoasteryInput"
+            type="text"
+            placeholder="例如：仟珣 Coffee · 罕贝拉"
+          />
+        </div>
+        <div class="bean-form-group">
+          <label for="beanRoastSelect">烘焙度</label>
+          <select id="beanRoastSelect">
+            <option value="">不指定</option>
+            <option value="浅烘">浅烘</option>
+            <option value="中烘">中烘</option>
+            <option value="中深烘">中深烘</option>
+            <option value="深烘">深烘</option>
+          </select>
+        </div>
+        <div class="bean-form-group">
+          <label for="beanDoseInput">推荐投粉 (g)</label>
+          <input id="beanDoseInput" type="number" step="0.1" placeholder="18" />
+        </div>
+        <div class="bean-form-group">
+          <label for="beanYieldInput">推荐出品 (g)</label>
+          <input id="beanYieldInput" type="number" step="0.1" placeholder="36" />
+        </div>
+        <div class="bean-form-group">
+          <label for="beanTempInput">推荐水温 (℃)</label>
+          <input id="beanTempInput" type="number" step="0.5" placeholder="93" />
+        </div>
+        <div class="bean-form-group">
+          <label for="beanGrindInput">研磨刻度 / 机型</label>
+          <input
+            id="beanGrindInput"
+            type="text"
+            placeholder="例如：德龙890 研磨 4 格"
+          />
+        </div>
+        <div class="bean-form-group bean-form-wide">
+          <label for="beanNotesInput">备注（可选）</label>
+          <input
+            id="beanNotesInput"
+            type="text"
+            placeholder="例如：适合 1:2，萃取 27s，偏巧克力坚果"
+          />
+        </div>
+        <div class="bean-form-actions">
+          <button class="bean-btn-small" type="button" id="beanSaveBtn">
+            保存为档案
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
     (function () {
-      const STATE_KEY = "dailyCoffee_state_v2_photo";
-      const LOG_KEY = "dailyCoffee_logs_v1";
+      const STATE_KEY = "dailyCoffee_state_v3_photo_in_log";
+      const LOG_KEY = "dailyCoffee_logs_v3_photo";
+      const BEAN_KEY = "dailyCoffee_beans_v1";
 
-      const weekdayMap = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-      const weekdayMapZh = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+      const weekdayMap = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ];
+      const weekdayMapZh = [
+        "星期日",
+        "星期一",
+        "星期二",
+        "星期三",
+        "星期四",
+        "星期五",
+        "星期六"
+      ];
 
       const dateEl = document.getElementById("dateDisplay");
       const weekdayEl = document.getElementById("weekdayDisplay");
+
       const ratingStars = document.querySelectorAll("#ratingStars .star");
       const saveBtn = document.getElementById("saveBtn");
       const saveToLogBtn = document.getElementById("saveToLogBtn");
@@ -828,6 +1387,36 @@
       const ratioCommentEl = document.getElementById("ratioComment");
       const historyList = document.getElementById("historyList");
       const historyEmptyHint = document.getElementById("historyEmptyHint");
+
+      const tabToday = document.getElementById("tabToday");
+      const tabHistory = document.getElementById("tabHistory");
+      const viewToday = document.getElementById("viewToday");
+      const viewHistory = document.getElementById("viewHistory");
+      const backToTodayBtn = document.getElementById("backToTodayBtn");
+
+      const historyBigList = document.getElementById("historyBigList");
+      const historyBigEmpty = document.getElementById("historyBigEmpty");
+      const filterRoast = document.getElementById("filterRoast");
+      const filterRating = document.getElementById("filterRating");
+      const filterKeyword = document.getElementById("filterKeyword");
+
+      // 豆子档案相关
+      const openBeanModalBtn = document.getElementById("openBeanModalBtn");
+      const beanModal = document.getElementById("beanModal");
+      const beanModalBackdrop = document.getElementById("beanModalBackdrop");
+      const beanModalCloseBtn = document.getElementById("beanModalCloseBtn");
+      const beanListEl = document.getElementById("beanList");
+      const beanEmptyHint = document.getElementById("beanEmptyHint");
+      const beanSaveBtn = document.getElementById("beanSaveBtn");
+
+      const beanNameInput = document.getElementById("beanNameInput");
+      const beanRoasteryInput = document.getElementById("beanRoasteryInput");
+      const beanRoastSelect = document.getElementById("beanRoastSelect");
+      const beanDoseInput = document.getElementById("beanDoseInput");
+      const beanYieldInput = document.getElementById("beanYieldInput");
+      const beanTempInput = document.getElementById("beanTempInput");
+      const beanGrindInput = document.getElementById("beanGrindInput");
+      const beanNotesInput = document.getElementById("beanNotesInput");
 
       const fieldNames = [
         "coffeeName",
@@ -849,6 +1438,7 @@
 
       let currentRating = 0;
       let logs = [];
+      let beans = [];
 
       function setTodayDate() {
         const now = new Date();
@@ -880,7 +1470,11 @@
           if (typeof state.rating === "number") {
             setRating(state.rating);
           }
-          if (state.photoDataUrl && photoPreview && photoPreviewWrapper) {
+          if (
+            state.photoDataUrl &&
+            photoPreview &&
+            photoPreviewWrapper
+          ) {
             photoPreview.src = state.photoDataUrl;
             photoPreviewWrapper.classList.add("has-image");
           }
@@ -898,7 +1492,11 @@
             state[name] = el.value;
           });
           state.rating = currentRating;
-          if (photoPreview && photoPreviewWrapper && photoPreviewWrapper.classList.contains("has-image")) {
+          if (
+            photoPreview &&
+            photoPreviewWrapper &&
+            photoPreviewWrapper.classList.contains("has-image")
+          ) {
             state.photoDataUrl = photoPreview.src;
           } else {
             state.photoDataUrl = "";
@@ -918,10 +1516,12 @@
           if (!raw) {
             logs = [];
             renderLogs();
+            renderHistoryPage();
             return;
           }
           logs = JSON.parse(raw) || [];
           renderLogs();
+          renderHistoryPage();
         } catch (e) {
           console.warn("loadLogs error", e);
           logs = [];
@@ -933,6 +1533,30 @@
           localStorage.setItem(LOG_KEY, JSON.stringify(logs));
         } catch (e) {
           console.warn("saveLogs error", e);
+        }
+      }
+
+      function loadBeans() {
+        try {
+          const raw = localStorage.getItem(BEAN_KEY);
+          if (!raw) {
+            beans = [];
+            renderBeans();
+            return;
+          }
+          beans = JSON.parse(raw) || [];
+          renderBeans();
+        } catch (e) {
+          console.warn("loadBeans error", e);
+          beans = [];
+        }
+      }
+
+      function saveBeans() {
+        try {
+          localStorage.setItem(BEAN_KEY, JSON.stringify(beans));
+        } catch (e) {
+          console.warn("saveBeans error", e);
         }
       }
 
@@ -963,17 +1587,20 @@
 
       function updateSummary() {
         const name = fields.coffeeName.value || "今天这杯";
-        const beans = fields.beans.value || "还没写豆子信息";
+        const beansText = fields.beans.value || "还没写豆子信息";
         const flavor = fields.flavor.value || "风味还没记录";
         const mood = fields.mood.value || "写几句今天的心情吧";
 
         summaryTitle.textContent = "今天先喝一口再说：" + name;
-        summaryLine1.textContent = "豆子：" + beans + " · 风味印象：" + flavor;
+        summaryLine1.textContent = "豆子：" + beansText + " · 风味印象：" + flavor;
         if (currentRating > 0) {
-          let stars = "★".repeat(currentRating) + "☆".repeat(5 - currentRating);
-          summaryLine2.textContent = "今日满意度：" + stars + " · " + mood;
+          const stars =
+            "★".repeat(currentRating) + "☆".repeat(5 - currentRating);
+          summaryLine2.textContent =
+            "今日满意度：" + stars + " · " + mood;
         } else {
-          summaryLine2.textContent = "还没打分，可以点下面的圆点给今天这杯一个评分。";
+          summaryLine2.textContent =
+            "还没打分，可以点下面的圆点给今天这杯一个评分。";
         }
 
         const r = computeRatio();
@@ -993,12 +1620,14 @@
           return;
         }
         historyEmptyHint.style.display = "none";
+
         logs
           .slice()
           .reverse()
           .forEach((item) => {
             const div = document.createElement("div");
             div.className = "history-item";
+
             const stars =
               item.rating && item.rating > 0
                 ? "★".repeat(item.rating)
@@ -1007,29 +1636,156 @@
               item.rating && item.rating > 0
                 ? "☆".repeat(5 - item.rating)
                 : "";
-            div.innerHTML = `
-              <div class="history-top">
-                <div class="history-name">${item.coffeeName || "无名咖啡"}</div>
-                <div class="history-meta">${item.date} · ${item.time}</div>
-              </div>
-              <div class="history-meta">${item.beans || "豆子未记录"} · ${
-              item.roast || "烘焙度未知"
-            }</div>
-              <div class="history-notes">
-                <span>评分：</span>
-                <span class="history-stars">
-                  <span class="history-star">${stars}</span>
-                  <span class="history-star">${emptyStars}</span>
-                </span>
-              </div>
-              ${
-                item.shortNote
-                  ? `<div class="history-notes">摘录：${item.shortNote}</div>`
-                  : ""
-              }
-            `;
+
+            const photoHtml = item.photoDataUrl
+              ? '<img src="' +
+                item.photoDataUrl +
+                '" alt="杯子照片" />'
+              : '<span class="history-thumb-placeholder">无图</span>';
+
+            const noteHtml = item.shortNote
+              ? '<div class="history-notes">摘录：' +
+                item.shortNote +
+                "</div>"
+              : "";
+
+            div.innerHTML =
+              '<div class="history-item-inner">' +
+              '  <div class="history-thumb">' +
+              photoHtml +
+              "  </div>" +
+              '  <div class="history-text">' +
+              '    <div class="history-top">' +
+              '      <div class="history-name">' +
+              (item.coffeeName || "无名咖啡") +
+              "</div>" +
+              '      <div class="history-meta">' +
+              item.date +
+              " · " +
+              item.time +
+              "</div>" +
+              "    </div>" +
+              '    <div class="history-meta">' +
+              (item.beans || "豆子未记录") +
+              " · " +
+              (item.roast || "烘焙度未知") +
+              "</div>" +
+              '    <div class="history-notes">' +
+              "      <span>评分：</span>" +
+              '      <span class="history-stars">' +
+              '        <span class="history-star">' +
+              stars +
+              "</span>" +
+              '        <span class="history-star">' +
+              emptyStars +
+              "</span>" +
+              "      </span>" +
+              "    </div>" +
+              noteHtml +
+              "  </div>" +
+              "</div>";
+
             historyList.appendChild(div);
           });
+      }
+
+      function renderHistoryPage() {
+        if (!historyBigList || !historyBigEmpty) return;
+
+        historyBigList.innerHTML = "";
+
+        if (!logs.length) {
+          historyBigEmpty.style.display = "block";
+          return;
+        }
+
+        const roastFilter = filterRoast ? filterRoast.value : "";
+        const minRating = filterRating
+          ? parseInt(filterRating.value || "0", 10)
+          : 0;
+        const keyword = filterKeyword
+          ? filterKeyword.value.trim().toLowerCase()
+          : "";
+
+        let data = logs.slice().sort((a, b) => (a.id || 0) - (b.id || 0));
+        data = data.reverse();
+
+        const filtered = data.filter((item) => {
+          if (roastFilter && item.roast !== roastFilter) return false;
+          if (minRating && (!item.rating || item.rating < minRating))
+            return false;
+          if (keyword) {
+            const text =
+              (item.coffeeName || "") +
+              " " +
+              (item.beans || "") +
+              " " +
+              (item.notes || "") +
+              " " +
+              (item.shortNote || "");
+            if (!text.toLowerCase().includes(keyword)) return false;
+          }
+          return true;
+        });
+
+        if (!filtered.length) {
+          historyBigEmpty.style.display = "block";
+          return;
+        }
+
+        historyBigEmpty.style.display = "none";
+
+        filtered.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "history-big-item";
+
+          const photoHtml = item.photoDataUrl
+            ? '<img src="' +
+              item.photoDataUrl +
+              '" alt="杯子照片" />'
+            : '<span class="history-big-photo-placeholder">无图</span>';
+
+          const stars =
+            item.rating && item.rating > 0
+              ? "★".repeat(item.rating) + "☆".repeat(5 - item.rating)
+              : "未评分";
+
+          const notesText =
+            item.notes ||
+            item.shortNote ||
+            "";
+
+          div.innerHTML =
+            '<div class="history-big-photo">' +
+            photoHtml +
+            "</div>" +
+            '<div class="history-big-main">' +
+            '  <div class="history-big-top">' +
+            '    <div class="history-big-name">' +
+            (item.coffeeName || "无名咖啡") +
+            "</div>" +
+            '    <div class="history-big-meta">' +
+            (item.date || "") +
+            (item.time ? " · " + item.time : "") +
+            "</div>" +
+            "  </div>" +
+            '  <div class="history-big-meta">' +
+            (item.beans || "豆子未记录") +
+            " · " +
+            (item.roast || "烘焙度未知") +
+            "</div>" +
+            '  <div class="history-big-stars">评分：' +
+            stars +
+            "</div>" +
+            (notesText
+              ? '<div class="history-big-notes">' +
+                notesText +
+                "</div>"
+              : "") +
+            "</div>";
+
+          historyBigList.appendChild(div);
+        });
       }
 
       function addToLog() {
@@ -1040,33 +1796,46 @@
         const hh = String(now.getHours()).padStart(2, "0");
         const mm = String(now.getMinutes()).padStart(2, "0");
 
+        const fullNote = fields.notes.value || "";
         const shortNote =
-          fields.notes.value.length > 40
-            ? fields.notes.value.slice(0, 40) + "..."
-            : fields.notes.value;
+          fullNote.length > 60 ? fullNote.slice(0, 60) + "..." : fullNote;
+
+        let photoDataUrl = "";
+        if (
+          photoPreview &&
+          photoPreviewWrapper &&
+          photoPreviewWrapper.classList.contains("has-image")
+        ) {
+          photoDataUrl = photoPreview.src;
+        }
 
         const entry = {
           id: now.getTime(),
-          date: `${y}-${m}-${d}`,
-          time: `${hh}:${mm}`,
+          date: y + "-" + m + "-" + d,
+          time: hh + ":" + mm,
           coffeeName: fields.coffeeName.value,
           beans: fields.beans.value,
           roast: fields.roast.value,
           rating: currentRating,
-          shortNote
+          notes: fullNote,
+          shortNote: shortNote,
+          photoDataUrl: photoDataUrl
         };
 
         logs.push(entry);
-        if (logs.length > 30) {
-          logs = logs.slice(logs.length - 30);
+        if (logs.length > 60) {
+          logs = logs.slice(logs.length - 60);
         }
         saveLogs();
         renderLogs();
-        alert("已将今天这杯保存到历史列表（不含图片）。");
+        renderHistoryPage();
+        alert("已将今天这杯（含图片）保存到历史列表。");
       }
 
       function clearToday() {
-        const ok = confirm("确认清空今天这杯的所有记录？只会影响今天，不会删除历史。");
+        const ok = confirm(
+          "确认清空今天这杯的所有记录？只会影响今天，不会删除历史。"
+        );
         if (!ok) return;
         fieldNames.forEach((name) => {
           const el = fields[name];
@@ -1087,11 +1856,183 @@
       }
 
       function clearHistory() {
-        const ok = confirm("确认删除所有历史记录？此操作无法撤销。");
+        const ok = confirm(
+          "确认删除所有历史记录？此操作无法撤销。"
+        );
         if (!ok) return;
         logs = [];
         saveLogs();
         renderLogs();
+        renderHistoryPage();
+      }
+
+      function switchView(target) {
+        const showHistory = target === "history";
+        if (viewToday) viewToday.classList.toggle("hidden", showHistory);
+        if (viewHistory) viewHistory.classList.toggle("hidden", !showHistory);
+        if (tabToday)
+          tabToday.classList.toggle("tab-active", !showHistory);
+        if (tabHistory)
+          tabHistory.classList.toggle("tab-active", showHistory);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      /* 豆子档案相关逻辑 */
+
+      function openBeanModal() {
+        if (!beanModal) return;
+        beanModal.classList.remove("hidden");
+      }
+
+      function closeBeanModal() {
+        if (!beanModal) return;
+        beanModal.classList.add("hidden");
+      }
+
+      function clearBeanForm() {
+        beanNameInput.value = "";
+        beanRoasteryInput.value = "";
+        beanRoastSelect.value = "";
+        beanDoseInput.value = "";
+        beanYieldInput.value = "";
+        beanTempInput.value = "";
+        beanGrindInput.value = "";
+        beanNotesInput.value = "";
+      }
+
+      function renderBeans() {
+        beanListEl.innerHTML = "";
+        if (!beans.length) {
+          beanEmptyHint.classList.remove("hidden");
+          return;
+        }
+        beanEmptyHint.classList.add("hidden");
+
+        beans.forEach((bean) => {
+          const div = document.createElement("div");
+          div.className = "bean-item";
+          div.dataset.id = String(bean.id);
+
+          const line2Parts = [];
+          if (bean.roastery) line2Parts.push(bean.roastery);
+          if (bean.roast) line2Parts.push(bean.roast);
+          const metaText = line2Parts.join(" · ") || "未写烘焙商 / 烘焙度";
+
+          const ratioParts = [];
+          if (bean.dose) ratioParts.push(bean.dose + "g");
+          if (bean.yield) ratioParts.push(bean.yield + "g");
+          const ratioText = ratioParts.length
+            ? "推荐：" + ratioParts.join(" → ")
+            : "";
+
+          const grindText = bean.grind || "";
+          const notesText = bean.notes || "";
+
+          div.innerHTML =
+            '<div class="bean-top">' +
+            '  <div class="bean-name">' +
+            bean.name +
+            "</div>" +
+            '  <div class="bean-meta">' +
+            metaText +
+            "</div>" +
+            "</div>" +
+            (ratioText
+              ? '<div class="bean-tag">' + ratioText + "</div>"
+              : "") +
+            (grindText
+              ? '<div class="bean-tag">研磨：' + grindText + "</div>"
+              : "") +
+            (notesText
+              ? '<div class="bean-tag">备注：' + notesText + "</div>"
+              : "") +
+            '<div class="bean-actions">' +
+            '  <button class="bean-btn-small" data-action="apply">使用这一档</button>' +
+            '  <button class="bean-btn-small danger" data-action="delete">删除</button>' +
+            "</div>";
+
+          beanListEl.appendChild(div);
+        });
+      }
+
+      function addBeanFromForm() {
+        const name = beanNameInput.value.trim();
+        if (!name) {
+          alert("请至少填写“名称”。");
+          return;
+        }
+
+        const bean = {
+          id: Date.now(),
+          name: name,
+          roastery: beanRoasteryInput.value.trim(),
+          roast: beanRoastSelect.value || "",
+          dose: beanDoseInput.value.trim(),
+          yield: beanYieldInput.value.trim(),
+          temp: beanTempInput.value.trim(),
+          grind: beanGrindInput.value.trim(),
+          notes: beanNotesInput.value.trim()
+        };
+
+        beans.push(bean);
+        saveBeans();
+        renderBeans();
+        clearBeanForm();
+        alert("已保存到豆子档案库。");
+      }
+
+      function applyBean(beanId) {
+        const idNum = Number(beanId);
+        const bean = beans.find((b) => b.id === idNum);
+        if (!bean) return;
+
+        // Beans 字段：名称 + 烘焙商
+        const parts = [bean.name];
+        if (bean.roastery) parts.push(bean.roastery);
+        fields.beans.value = parts.join(" · ");
+
+        // 烘焙度
+        if (bean.roast && fields.roast) {
+          fields.roast.value = bean.roast;
+        }
+
+        // 参数
+        if (bean.dose && fields.dose) fields.dose.value = bean.dose;
+        if (bean.yield && fields.yield) fields.yield.value = bean.yield;
+        if (bean.temp && fields.temp) fields.temp.value = bean.temp;
+
+        // 备注：把档案信息追加一行
+        const extraLines = [];
+        if (bean.grind) extraLines.push("研磨：" + bean.grind);
+        if (bean.notes) extraLines.push(bean.notes);
+        if (extraLines.length) {
+          const prefix = "[" + bean.name + " 档案]";
+          const newBlock = prefix + "\n" + extraLines.join(" · ");
+          if (fields.notes.value) {
+            fields.notes.value += "\n\n" + newBlock;
+          } else {
+            fields.notes.value = newBlock;
+          }
+        }
+
+        saveState();
+        updateSummary();
+        alert("已应用豆子档案：「" + bean.name + "」。");
+        closeBeanModal();
+      }
+
+      function deleteBean(beanId) {
+        const idNum = Number(beanId);
+        const bean = beans.find((b) => b.id === idNum);
+        const ok = confirm(
+          "确认删除豆子档案「" +
+            (bean ? bean.name : "") +
+            "」？删除后无法恢复。"
+        );
+        if (!ok) return;
+        beans = beans.filter((b) => b.id !== idNum);
+        saveBeans();
+        renderBeans();
       }
 
       function bindEvents() {
@@ -1143,14 +2084,72 @@
             reader.readAsDataURL(file);
           });
         }
+
+        if (tabToday) {
+          tabToday.addEventListener("click", () => switchView("today"));
+        }
+        if (tabHistory) {
+          tabHistory.addEventListener("click", () => switchView("history"));
+        }
+        if (backToTodayBtn) {
+          backToTodayBtn.addEventListener("click", () => switchView("today"));
+        }
+
+        if (filterRoast) {
+          filterRoast.addEventListener("change", renderHistoryPage);
+        }
+        if (filterRating) {
+          filterRating.addEventListener("change", renderHistoryPage);
+        }
+        if (filterKeyword) {
+          filterKeyword.addEventListener("input", renderHistoryPage);
+        }
+
+        // 豆子档案事件
+        if (openBeanModalBtn) {
+          openBeanModalBtn.addEventListener("click", openBeanModal);
+        }
+        if (beanModalBackdrop) {
+          beanModalBackdrop.addEventListener("click", closeBeanModal);
+        }
+        if (beanModalCloseBtn) {
+          beanModalCloseBtn.addEventListener("click", closeBeanModal);
+        }
+        if (beanSaveBtn) {
+          beanSaveBtn.addEventListener("click", addBeanFromForm);
+        }
+        if (beanListEl) {
+          beanListEl.addEventListener("click", (e) => {
+            const target = e.target;
+            if (!(target instanceof HTMLElement)) return;
+            const action = target.dataset.action;
+            if (!action) return;
+            const itemEl = target.closest(".bean-item");
+            if (!itemEl) return;
+            const id = itemEl.dataset.id;
+            if (!id) return;
+
+            if (action === "apply") {
+              applyBean(id);
+            } else if (action === "delete") {
+              deleteBean(id);
+            }
+          });
+        }
       }
 
       // 初始化
-      setTodayDate();
-      loadState();
-      loadLogs();
-      updateSummary();
-      bindEvents();
+      function init() {
+        setTodayDate();
+        loadState();
+        loadLogs();
+        loadBeans();
+        updateSummary();
+        bindEvents();
+        switchView("today");
+      }
+
+      init();
     })();
   </script>
 </body>
