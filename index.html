@@ -8,11 +8,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Daily Coffee" />
 
-  <!-- iPad 主屏幕图标：请确保仓库根目录有 coffee-icon.jpg -->
+  <!-- iPad 主屏幕图标：仓库根目录里是 coffee-icon.jpg -->
   <link rel="apple-touch-icon" href="coffee-icon.jpg" />
 
   <title>Daily Coffee · 先喝一口再说</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     :root {
       --bg-1: #fdf7f0;
@@ -39,7 +40,7 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "PingFang SC", "Microsoft YaHei", sans-serif;
       color: var(--text-main);
-      padding: 14px;
+      padding: 12px 18px;
     }
 
     .app {
@@ -48,10 +49,10 @@
       border-radius: 28px;
       background: rgba(255, 255, 255, 0.9);
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
-      padding: 18px 20px 14px;
+      padding: 22px 24px 20px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 18px;
       backdrop-filter: blur(16px);
     }
 
@@ -63,7 +64,7 @@
       align-items: flex-start;
       gap: 16px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      padding-bottom: 6px;
+      padding-bottom: 10px;
       flex-wrap: wrap;
     }
 
@@ -184,10 +185,10 @@
       background: var(--card);
       border-radius: 20px;
       border: 1px solid var(--border);
-      padding: 12px 14px;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .card-header {
@@ -283,7 +284,7 @@
       border-radius: 10px;
       border: 1px solid rgba(0, 0, 0, 0.12);
       background: rgba(250, 252, 251, 0.8);
-      min-height: 64px;
+      min-height: 78px;
       resize: none;
       font-size: 13px;
       line-height: 1.5;
@@ -306,43 +307,54 @@
       transform: translateY(1px);
     }
 
-    /* 图片上传位 */
+    /* ======= 新：照片 + 自由记 一体卡片 ======= */
 
-    .photo-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
+    .photo-notes-group {
       margin-top: 4px;
-      flex-wrap: nowrap;
+    }
+
+    .photo-notes-card {
+      margin-top: 6px;
+      padding: 10px 14px 12px;
+      border-radius: 16px;
+      border: 1px dashed rgba(0, 0, 0, 0.14);
+      background: linear-gradient(145deg, #fbfffd, #f7faf8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
     }
 
     .photo-upload {
-      border-radius: 10px;
+      border-radius: 999px;
       border: 1px dashed var(--accent-dark);
-      padding: 6px 10px;
+      padding: 6px 12px;
       font-size: 12px;
       color: var(--accent-dark);
       background: rgba(255, 255, 255, 0.9);
       cursor: pointer;
       white-space: nowrap;
       user-select: none;
+      align-self: flex-start;
     }
 
     .photo-upload:hover {
       background: var(--accent-soft);
     }
 
+    /* 大正方形图片位 */
     .photo-preview {
-      width: 160px;
-      height: 160px;
-      border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.12);
+      width: 210px;
+      height: 210px;
+      border-radius: 18px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
       background: rgba(0, 0, 0, 0.02);
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
       position: relative;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
     }
 
     .photo-preview img {
@@ -365,6 +377,22 @@
 
     .photo-preview.has-image .photo-placeholder {
       display: none;
+    }
+
+    /* 小长方形自由记卡片，宽度跟照片保持一致 */
+    .photo-notes-textarea {
+      width: 210px;
+      min-height: 70px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      background: #ffffff;
+      font-size: 12px;
+      line-height: 1.5;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .photo-notes-textarea::placeholder {
+      font-size: 12px;
     }
 
     /* 评分与按钮 */
@@ -509,7 +537,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-height: 210px;
+      max-height: 230px;
       overflow: auto;
     }
 
@@ -1084,7 +1112,7 @@
             </div>
           </div>
 
-          <!-- 右半：风味 + 心情 + 图片 + 备注 -->
+          <!-- 右半：风味 + 心情 + 图片+自由记一体卡片 -->
           <div>
             <div class="field-group">
               <div class="field-label-row">
@@ -1111,32 +1139,29 @@
               />
             </div>
 
-            <div class="field-group">
+            <div class="field-group photo-notes-group">
               <div class="field-label-row">
-                <div class="field-label">今日照片 · Photo</div>
-                <div class="field-hint">杯子 / 场景随手拍一张</div>
+                <div class="field-label">今日照片 & 自由记 · Photo & Notes</div>
+                <div class="field-hint">杯子 / 场景 + 一两句想法</div>
               </div>
-              <div class="photo-row">
+
+              <div class="photo-notes-card">
                 <label class="photo-upload">
                   上传图片
                   <input type="file" accept="image/*" id="photoInput" hidden />
                 </label>
+
                 <div class="photo-preview" id="photoPreviewWrapper">
                   <img id="photoPreview" alt="今日咖啡照片预览" />
                   <span class="photo-placeholder">暂无图片</span>
                 </div>
-              </div>
-            </div>
 
-            <div class="field-group">
-              <div class="field-label-row">
-                <div class="field-label">自由记 · Notes</div>
+                <textarea
+                  class="field-textarea photo-notes-textarea"
+                  data-field="notes"
+                  placeholder="今天这杯哪里满意，哪里想下次调整？口感、萃取观察、机器状态都可以随便记。"
+                ></textarea>
               </div>
-              <textarea
-                class="field-textarea"
-                data-field="notes"
-                placeholder="今天这杯哪里满意，哪里想下次调整？口感、萃取观察、机器状态都可以随便记。"
-              ></textarea>
             </div>
           </div>
         </div>
